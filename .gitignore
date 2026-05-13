@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.Python
+env/
+venv/
+.venv/
+pip-wheel-metadata/
+
+# Pytest / Hypothesis
+.pytest_cache/
+.hypothesis/
+
+# Distribution / packaging
+*.manifest
+*.spec
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code / Kiro
+.vscode/
+.kiro/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data files (large)
+*.parquet
+*.jsonl
+
+# Model checkpoints
+checkpoints/
+*.bin
+*.pt
+*.safetensors
+
+# Logs
+*.log
+experiment_logs/
+
+# Environment
+.env
+*.env

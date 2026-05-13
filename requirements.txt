@@ -1,0 +1,37 @@
+# RajNLP-50K — pinned dependency versions for full reproducibility (Requirement 17.2)
+# Install with: pip install -r requirements.txt
+
+# --- Data collection ---
+# Note: tweepy 4.14.0 uses `imghdr` which was removed in Python 3.13+.
+# Use 4.16.0+ for Python 3.13/3.14 compatibility.
+tweepy==4.16.0
+selenium==4.21.0
+
+# --- Annotation tooling ---
+label-studio-sdk==0.0.32
+
+# --- Dataset handling ---
+datasets==2.19.1
+pyarrow==16.1.0
+
+# --- Model training and inference ---
+transformers==4.41.1
+torch==2.3.0
+huggingface_hub==0.23.2
+
+# --- Property-based testing ---
+hypothesis==6.103.1
+
+# --- Evaluation and metrics ---
+scikit-learn==1.5.0
+seqeval==1.2.2
+
+# --- Data processing ---
+numpy==1.26.4
+pandas==2.2.2
+
+# --- Testing framework ---
+pytest==8.2.1
+
+# --- Deduplication (MinHash LSH) ---
+datasketch==1.6.5
