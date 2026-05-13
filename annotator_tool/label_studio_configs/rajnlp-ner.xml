@@ -1,0 +1,23 @@
+<!--
+  Label Studio labeling interface configuration for the rajnlp-ner project.
+
+  Task: Span-level NER labeling with entity types PER / LOC / ORG
+  Overlap: 3 (all annotators label every sentence — configured in project_settings.json)
+  Blind annotation: enabled (configured in project_settings.json)
+  UI enforcement: NER allows zero spans (no required="true") — Requirement 4.4
+
+  Requirements: 4.1, 4.3, 4.4
+-->
+<View>
+  <!-- Display the full original sentence text, including emoji and non-Latin characters -->
+  <Header value="Sentence" />
+  <Text name="text" value="$text" />
+
+  <!-- NER span labeling — zero or more spans allowed (Requirement 4.4) -->
+  <Header value="Named Entities (optional — mark zero or more spans)" />
+  <Labels name="ner_spans" toName="text">
+    <Label value="PER" background="#FF6B6B" />
+    <Label value="LOC" background="#4ECDC4" />
+    <Label value="ORG" background="#45B7D1" />
+  </Labels>
+</View>

@@ -1,0 +1,52 @@
+<!--
+  Label Studio labeling interface configuration for the rajnlp-toxicity project.
+
+  Task: Multi-label toxicity labeling across 4 categories
+  Overlap: 3 (all annotators label every sentence — configured in project_settings.json)
+  Blind annotation: enabled (configured in project_settings.json)
+  UI enforcement: toxicity label (including "none") is required before submission
+                  (Requirement 4.3)
+
+  Onboarding: content warning panel displayed before annotation begins (Requirement 16.2)
+  Opt-out: annotators may withdraw at any time without penalty (Requirement 16.3)
+
+  Requirements: 4.1, 4.2, 4.3, 4.4, 16.2, 16.3
+-->
+<View>
+  <!-- ===================================================================
+       ONBOARDING INSTRUCTIONS PANEL — Content Warning (Requirement 16.2)
+       Presented to every annotator before they begin the toxicity task.
+       =================================================================== -->
+  <View style="background-color: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; padding: 16px; margin-bottom: 16px;">
+    <Header value="⚠️ CONTENT WARNING — Please read carefully before proceeding" />
+    <View style="font-size: 14px; line-height: 1.6;">
+      <Header value="This annotation task involves labeling text for toxic content. You will encounter sentences that may contain:" />
+      <Header value="• Caste-based slurs and derogatory references to caste identity" />
+      <Header value="• Religious hatred, incitement, or sectarian abuse" />
+      <Header value="• Gender-based harassment, misogyny, and sexist language" />
+      <Header value="• General toxic, abusive, or threatening language" />
+      <Header value="Exposure to this material can be distressing. Before you begin:" />
+      <Header value="1. You are NOT required to complete this task. You may opt out at any time without penalty. Your sentences will be reassigned." />
+      <Header value="2. Your daily exposure is limited to a maximum of 2 hours of toxicity annotation per day." />
+      <Header value="3. A check-in with the annotation lead will be conducted at least once per week." />
+      <Header value="4. If you feel distressed at any point, please stop immediately and contact the annotation lead." />
+      <Header value="By proceeding with annotation, you confirm that you have read and understood this content warning." />
+    </View>
+  </View>
+
+  <!-- Display the full original sentence text, including emoji and non-Latin characters -->
+  <Header value="Sentence" />
+  <Text name="text" value="$text" granularity="sentence" />
+
+  <!-- Toxicity multi-label — required before submission (Requirement 4.3) -->
+  <!-- Annotators must select at least one option, including "none" for non-toxic content -->
+  <Header value="Toxicity Categories (required — select all that apply, or 'none')" />
+  <Choices name="toxicity_labels" toName="text" choice="multiple" required="true"
+           requiredMessage="Please select at least one toxicity label (or 'none') before submitting.">
+    <Choice value="none" hint="Content is not toxic" />
+    <Choice value="caste_slur" hint="Contains caste-based slurs or derogatory references" />
+    <Choice value="religious" hint="Contains religious hatred or incitement" />
+    <Choice value="gender" hint="Contains gender-based harassment or misogyny" />
+    <Choice value="general" hint="Contains general toxic content not covered by other categories" />
+  </Choices>
+</View>

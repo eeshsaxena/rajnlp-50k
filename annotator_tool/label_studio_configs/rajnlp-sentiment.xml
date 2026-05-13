@@ -1,0 +1,24 @@
+<!--
+  Label Studio labeling interface configuration for the rajnlp-sentiment project.
+
+  Task: 3-class sentiment labeling (positive / neutral / negative)
+  Overlap: 3 (all annotators label every sentence — configured in project_settings.json)
+  Blind annotation: enabled (configured in project_settings.json)
+  UI enforcement: sentiment label is required before submission (required="true")
+
+  Requirements: 4.1, 4.2, 4.3, 4.4
+-->
+<View>
+  <!-- Display the full original sentence text, including emoji and non-Latin characters -->
+  <Header value="Sentence" />
+  <Text name="text" value="$text" granularity="sentence" />
+
+  <!-- Sentiment label — required before submission (Requirement 4.2) -->
+  <Header value="Sentiment (required)" />
+  <Choices name="sentiment" toName="text" choice="single" required="true"
+           requiredMessage="Please select a sentiment label before submitting.">
+    <Choice value="positive" />
+    <Choice value="neutral" />
+    <Choice value="negative" />
+  </Choices>
+</View>
