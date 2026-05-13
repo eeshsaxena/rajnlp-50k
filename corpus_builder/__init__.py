@@ -3,6 +3,7 @@
 from corpus_builder.twitter_collector import TwitterCollector, TwitterAuthError
 from corpus_builder.sharechat_collector import ShareChatCollector
 from corpus_builder.filter_dedup import filter_rajasthani, deduplicate
+from corpus_builder.sampling import stratified_sample, split, InsufficientDataError
 
 __all__ = [
     "TwitterCollector",
@@ -10,4 +11,7 @@ __all__ = [
     "ShareChatCollector",
     "filter_rajasthani",
     "deduplicate",
+    "stratified_sample",
+    "split",
+    "InsufficientDataError",
 ]
