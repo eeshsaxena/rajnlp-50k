@@ -1,0 +1,56 @@
+{
+  "_comment": "Label Studio project settings for all three RajNLP annotation projects. Requirements: 4.1, 4.2, 4.3, 4.4",
+  "projects": {
+    "rajnlp-sentiment": {
+      "title": "RajNLP-50K Sentiment Annotation",
+      "description": "3-class sentiment labeling (positive / neutral / negative) for Rajasthani-Hindi code-switched sentences.",
+      "label_config_file": "rajnlp-sentiment.xml",
+      "overlap": 3,
+      "_overlap_comment": "overlap=3 means all 3 annotators label every sentence (Requirement 5.1)",
+      "show_annotation_history": false,
+      "_blind_annotation_comment": "show_annotation_history=false implements blind annotation mode — annotators cannot see each other's labels (Requirement 5.1)",
+      "sampling": "Sequential",
+      "task_data_login": null,
+      "task_data_password": null,
+      "color": "#FF6B6B",
+      "maximum_annotations": 3,
+      "is_published": true
+    },
+    "rajnlp-ner": {
+      "title": "RajNLP-50K NER Annotation",
+      "description": "Span-level named entity recognition (PER / LOC / ORG) for Rajasthani-Hindi code-switched sentences.",
+      "label_config_file": "rajnlp-ner.xml",
+      "overlap": 3,
+      "_overlap_comment": "overlap=3 means all 3 annotators label every sentence (Requirement 6.1)",
+      "show_annotation_history": false,
+      "_blind_annotation_comment": "show_annotation_history=false implements blind annotation mode — annotators cannot see each other's labels (Requirement 6.1)",
+      "sampling": "Sequential",
+      "task_data_login": null,
+      "task_data_password": null,
+      "color": "#4ECDC4",
+      "maximum_annotations": 3,
+      "is_published": true
+    },
+    "rajnlp-toxicity": {
+      "title": "RajNLP-50K Toxicity Annotation",
+      "description": "Multi-label toxicity detection (caste_slur / religious / gender / general) for Rajasthani-Hindi code-switched sentences.",
+      "label_config_file": "rajnlp-toxicity.xml",
+      "overlap": 3,
+      "_overlap_comment": "overlap=3 means all 3 annotators label every sentence (Requirement 7.1)",
+      "show_annotation_history": false,
+      "_blind_annotation_comment": "show_annotation_history=false implements blind annotation mode — annotators cannot see each other's labels (Requirement 7.1)",
+      "sampling": "Sequential",
+      "task_data_login": null,
+      "task_data_password": null,
+      "color": "#45B7D1",
+      "maximum_annotations": 3,
+      "is_published": true
+    }
+  },
+  "global_settings": {
+    "_note": "These settings apply to all three projects.",
+    "annotators_per_task": 3,
+    "blind_annotation_mode": true,
+    "_blind_annotation_mode_comment": "Prevents annotators from seeing each other's labels before submitting their own (Requirements 5.1, 6.1, 7.1)"
+  }
+}

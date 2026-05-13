@@ -228,8 +228,74 @@ class LangIDMetrics:
 
 
 # ---------------------------------------------------------------------------
+# Toxicity prediction models
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class ToxicityPrediction:
+    """Prediction output from the ToxicityClassifier for a single sentence."""
+
+    labels: list[str]
+    """Predicted toxicity labels — a subset of {"caste_slur", "religious", "gender", "general"}."""
+
+    per_category_scores: dict[str, float]
+    """Sigmoid scores per toxicity category, each in [0.0, 1.0]."""
+
+
+# ---------------------------------------------------------------------------
+# Sentiment prediction models
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class SentimentPrediction:
+    """Prediction output from the SentimentClassifier."""
+
+    label: Literal["positive", "neutral", "negative"]
+    """Predicted sentiment label."""
+
+    confidence: float
+    """Confidence score for the predicted label, in [0.0, 1.0]."""
+
+    per_class_scores: dict[str, float]
+    """Scores for each class: positive, neutral, negative."""
+
+
+@dataclass
+class TrainingLog:
+    """Log produced by a model training run."""
+
+    best_epoch: int
+    """Epoch index (0-based) at which the best validation metric was achieved."""
+
+    best_f1: float
+    """Best validation macro-F1 achieved during training."""
+
+    total_epochs_run: int
+    """Total number of epochs actually executed (may be < max_epochs due to early stopping)."""
+
+    seed: int
+    """Random seed used for this training run."""
+
+    class_weights: dict[str, float]
+    """Class weights applied during training (inversely proportional to class frequency)."""
+
+
+# ---------------------------------------------------------------------------
 # Round-trip validation models
 # ---------------------------------------------------------------------------
+
+
+@dataclass
+class NERPrediction:
+    """Prediction output from the NERTagger for a single sentence."""
+
+    spans: list[EntitySpan]
+    """Named entity spans detected in the sentence."""
+
+    bio_tags: list[str]
+    """BIO tag sequence for the full sentence (one tag per whitespace-delimited token)."""
 
 
 @dataclass
