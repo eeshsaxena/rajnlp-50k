@@ -644,6 +644,16 @@ def main(argv=None):
         help="Use a 100-sentence fixture instead of real data collection.",
     )
     parser.add_argument(
+        "--manual-data",
+        default=None,
+        help=(
+            "Path to a JSONL file (or comma-separated list of JSONL files) "
+            "containing manually collected sentences. "
+            "Generate this file with: python -m corpus_builder.manual_importer "
+            "--input data/manual_sentences.csv --output data/manual_raw.jsonl"
+        ),
+    )
+    parser.add_argument(
         "--log-level",
         default="INFO",
         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
@@ -674,6 +684,18 @@ def main(argv=None):
         if args.dry_run:
             logger.info("Phase 1 — dry-run mode: using 100-sentence fixture")
             raw_sentences = make_fixture_sentences(100)
+        elif args.manual_data:
+            logger.info("Phase 1 — manual data mode: loading from %s", args.manual_data)
+            from corpus_builder.manual_importer import load_from_jsonl, merge_jsonl_files
+            from pathlib import Path as _Path
+            manual_paths = [_Path(p.strip()) for p in args.manual_data.split(",")]
+            if len(manual_paths) == 1:
+                raw_sentences = load_from_jsonl(manual_paths[0])
+            else:
+                merged_path = _Path(args.output_dir) / "merged_raw.jsonl"
+                merge_jsonl_files(manual_paths, merged_path)
+                raw_sentences = load_from_jsonl(merged_path)
+            logger.info("Phase 1 — loaded %d sentences from manual data", len(raw_sentences))
         else:
             logger.info("Phase 1 — collecting real data (not implemented; using fixture)")
             raw_sentences = make_fixture_sentences(100)
