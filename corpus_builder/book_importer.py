@@ -44,8 +44,15 @@ from models.data_models import RawSentence
 
 logger = logging.getLogger(__name__)
 
+# Try to import Krutidev converter for legacy font PDFs
+try:
+    from corpus_builder.krutidev_converter import convert_pdf_text, is_likely_krutidev
+    _KRUTIDEV_AVAILABLE = True
+except ImportError:
+    _KRUTIDEV_AVAILABLE = False
+
 MIN_SENTENCE_CHARS = 15
-MAX_SENTENCE_CHARS = 500
+MAX_SENTENCE_CHARS = 1000  # increased from 500 to handle longer literary sentences
 
 
 def _nfc(text: str) -> str:
@@ -116,7 +123,7 @@ def import_from_pdf(
 
     with pdfplumber.open(str(path)) as pdf:
         total_pages = len(pdf.pages)
-        logger.info("PDF has %d pages", total_pages)
+        logger.info("PDF has %d pages — processing ALL pages (no limit)", total_pages)
 
         for page_num, page in enumerate(pdf.pages, start=1):
             if page_num % 10 == 0:
@@ -125,6 +132,11 @@ def import_from_pdf(
             text = page.extract_text()
             if not text:
                 continue
+
+            # Auto-detect and convert Krutidev/legacy font encoding
+            if _KRUTIDEV_AVAILABLE and is_likely_krutidev(text):
+                text = convert_pdf_text(text)
+                logger.debug("Page %d: converted from Krutidev encoding", page_num)
 
             page_sentences = _split_sentences(text)
             for sent in page_sentences:
