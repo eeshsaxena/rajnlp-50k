@@ -1,0 +1,6 @@
+text,source_url,platform,notes
+"म्हारो राजस्थान घणो सुंदर है, यठे रहणो घणो अच्छो लागे","https://twitter.com/example/status/123","twitter","example - positive sentiment"
+"Gehlot ne Jaipur mein BJP ke khilaf bada bayan diya","https://twitter.com/example/status/456","twitter","example - political"
+"सरकार कोनी सुणे आम आदमी की बात, बस वादे करे है","https://sharechat.com/post/789","sharechat","example - negative sentiment"
+"Vasundhara Raje ne Rajasthan mein rally ki, BJP workers excited","https://sharechat.com/post/101","sharechat","example - NER entities"
+"म्हारी माँ बाईसा ने कहा थारो काम घणो राम्रो है","","whatsapp","example - Rajasthani dialect"
