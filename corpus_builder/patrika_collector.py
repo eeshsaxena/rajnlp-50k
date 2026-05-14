@@ -224,18 +224,42 @@ class PatrikaCollector:
                     raw_texts.append(text)
 
         # --- Reader comments ---
+        # patrika.com uses various comment container patterns
         comment_selectors = [
             "div.comment-text",
             "div.comment-body",
             "div[class*='comment']",
             "span.comment-content",
             "p.comment",
+            "div.user-comment",
+            "div.reader-comment",
+            "li.comment",
+            "div[id*='comment']",
+            "section.comments",
+            "div.comments-section",
+            "div.comment-list",
+            "div.comment-item",
+            "span[class*='comment']",
+            "p[class*='comment']",
         ]
         for selector in comment_selectors:
             for comment_div in soup.select(selector):
                 text = comment_div.get_text(separator=" ", strip=True)
-                if text:
+                if text and len(text) > 15:
                     raw_texts.append(text)
+
+        # Also try to get any text that looks like user-generated content
+        # (short paragraphs in Hindi that aren't navigation/ads)
+        for p in soup.find_all("p"):
+            text = p.get_text(separator=" ", strip=True)
+            parent_classes = " ".join(p.parent.get("class", []) if p.parent else [])
+            # Skip navigation, ads, headers
+            if any(skip in parent_classes.lower() for skip in
+                   ["nav", "menu", "header", "footer", "ad", "banner", "sidebar"]):
+                continue
+            if (20 <= len(text) <= 300 and
+                    any('\u0900' <= c <= '\u097F' for c in text)):  # has Devanagari
+                raw_texts.append(text)
 
         # Split long texts into sentences
         sentences = []
