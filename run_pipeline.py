@@ -239,6 +239,7 @@ def raw_to_annotated(
 def run_phase1(
     raw_sentences: list[RawSentence],
     logger: logging.Logger,
+    skip_minhash: bool = False,
 ) -> tuple[DatasetSplit, list[RawSentence]]:
     """Filter, deduplicate, (optionally sample), and split raw sentences.
 
@@ -258,8 +259,19 @@ def run_phase1(
     logger.info("Phase 1 — filter_rajasthani: kept=%d sentences", len(filtered))
 
     logger.info("Phase 1 — deduplicate: input=%d sentences", len(filtered))
-    deduped = deduplicate(filtered)
-    logger.info("Phase 1 — deduplicate: kept=%d sentences", len(deduped))
+    if skip_minhash:
+        import unicodedata as _ud
+        seen: set[str] = set()
+        deduped: list[RawSentence] = []
+        for s in filtered:
+            key = _ud.normalize("NFC", s.text)
+            if key not in seen:
+                seen.add(key)
+                deduped.append(s)
+        logger.info("Phase 1 — deduplicate (exact only): kept=%d sentences", len(deduped))
+    else:
+        deduped = deduplicate(filtered)
+        logger.info("Phase 1 — deduplicate: kept=%d sentences", len(deduped))
 
     if len(deduped) >= _STRATIFIED_SAMPLE_THRESHOLD:
         logger.info(
@@ -659,6 +671,14 @@ def main(argv=None):
         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
         help="Logging verbosity level.",
     )
+    parser.add_argument(
+        "--skip-minhash",
+        action="store_true",
+        help=(
+            "Skip MinHash LSH near-duplicate pass (faster). "
+            "Recommended when exact dedup already reduces corpus to near-target size."
+        ),
+    )
 
     args = parser.parse_args(argv)
 
@@ -697,10 +717,12 @@ def main(argv=None):
                 raw_sentences = load_from_jsonl(merged_path)
             logger.info("Phase 1 — loaded %d sentences from manual data", len(raw_sentences))
         else:
-            logger.info("Phase 1 — collecting real data (not implemented; using fixture)")
-            raw_sentences = make_fixture_sentences(100)
-
-        dataset_split, all_raw = run_phase1(raw_sentences, logger)
+            # Load from all local data sources (Bhaskar, Patrika, books, Wikipedia)
+            logger.info("Phase 1 — loading from local data sources")
+            from corpus_builder.build_corpus import load_all_sources
+            raw_sentences = load_all_sources()
+            logger.info("Phase 1 — loaded %d sentences from local sources", len(raw_sentences))
+        dataset_split, all_raw = run_phase1(raw_sentences, logger, skip_minhash=True)
         logger.info("Phase 1 complete.")
     except Exception as exc:
         logger.error("Phase 1 FAILED: %s", exc, exc_info=True)

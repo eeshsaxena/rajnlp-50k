@@ -37,7 +37,7 @@ class RawSentence:
     collected_at: datetime
     """Collection timestamp in UTC."""
 
-    platform: Literal["twitter", "sharechat"]
+    platform: Literal["twitter", "sharechat", "news_bhaskar", "news_patrika", "books", "wikipedia", "other"]
     """Source platform identifier."""
 
     sentence_id: str
@@ -99,7 +99,7 @@ class AnnotatedSentence:
     text: str
     """Original sentence text (unmodified)."""
 
-    platform: Literal["twitter", "sharechat"]
+    platform: Literal["twitter", "sharechat", "news_bhaskar", "news_patrika", "books", "wikipedia", "other"]
     """Source platform."""
 
     split: Literal["train", "validation", "test"]

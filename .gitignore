@@ -36,9 +36,15 @@ Thumbs.db
 # Data files (large)
 *.parquet
 *.jsonl
+*.pkl
+*.csv
 
-# Model checkpoints
+# PDFs (source documents)
+*.pdf
+
+# Model checkpoints and trained models
 checkpoints/
+output/
 *.bin
 *.pt
 *.safetensors
@@ -50,3 +56,9 @@ experiment_logs/
 # Environment
 .env
 *.env
+
+# Misc
+1.txt
+_write_tests.py
+data/downloaded_pdfs/
+notebooks/

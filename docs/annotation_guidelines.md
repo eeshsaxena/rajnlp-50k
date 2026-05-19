@@ -27,7 +27,7 @@ This document defines the labeling rules, worked examples, and edge-case decisio
 
 ### What you are annotating
 
-You will label sentences collected from Twitter/X and ShareChat that contain Rajasthani-Hindi code-switching — sentences where speakers mix Rajasthani dialect words with Hindi, English, or transliterated text in a single utterance.
+You will label sentences collected from Dainik Bhaskar, Patrika (Rajasthan regional news), and Rajasthani literary books/PDFs that contain Rajasthani-Hindi code-switching — sentences where speakers mix Rajasthani dialect words with Hindi, English, or transliterated text in a single utterance.
 
 **Example sentence**: "म्हारो घर घणो सुंदर है, BJP ने Jaipur में rally ki"
 

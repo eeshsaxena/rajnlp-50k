@@ -619,9 +619,9 @@ class TestFilterRajasthaniUnit:
         WHEN  filter_rajasthani is called,
         THEN  the sentence is dropped.
         """
-        # Only "म्हारो" is a Rajasthani token; rest are Hindi/English
+        # Only "म्हारो" is in _TEST_LEXICON; rest are not
         s = _make_sentence("म्हारो यह बहुत अच्छा है")
-        result = filter_rajasthani([s])
+        result = filter_rajasthani([s], lexicon=_TEST_LEXICON)
         assert len(result) == 0
 
     def test_sentence_with_no_rajasthani_tokens_is_dropped(self):
