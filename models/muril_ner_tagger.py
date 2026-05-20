@@ -37,6 +37,7 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 MURIL_CHECKPOINT = "google/muril-base-cased"
+MURIL_REVISION = "refs/pr/3"  # safetensors version (avoids CVE-2025-32434 with torch < 2.6)
 
 # BIO label set
 BIO_LABELS = ["O", "B-PER", "I-PER", "B-LOC", "I-LOC", "B-ORG", "I-ORG"]
@@ -64,7 +65,7 @@ class MuRILNERTagger:
     def _load_tokenizer(self):
         from transformers import AutoTokenizer
         if self._tokenizer is None:
-            self._tokenizer = AutoTokenizer.from_pretrained(self.checkpoint)
+            self._tokenizer = AutoTokenizer.from_pretrained(self.checkpoint, revision=MURIL_REVISION)
         return self._tokenizer
 
     def _load_model(self):
@@ -72,6 +73,7 @@ class MuRILNERTagger:
         if self._model is None:
             self._model = AutoModelForTokenClassification.from_pretrained(
                 self.checkpoint,
+                revision=MURIL_REVISION,
                 num_labels=len(BIO_LABELS),
                 id2label=ID2LABEL,
                 label2id=LABEL2ID,
@@ -216,7 +218,7 @@ class MuRILNERTagger:
             per_device_train_batch_size=batch_size,
             per_device_eval_batch_size=batch_size,
             learning_rate=learning_rate,
-            evaluation_strategy="epoch",
+            eval_strategy="epoch",
             save_strategy="epoch",
             load_best_model_at_end=True,
             metric_for_best_model="span_f1",

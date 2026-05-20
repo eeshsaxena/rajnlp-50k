@@ -40,6 +40,7 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 MURIL_CHECKPOINT = "google/muril-base-cased"
+MURIL_REVISION = "refs/pr/3"  # safetensors version (avoids CVE-2025-32434 with torch < 2.6)
 SENTIMENT_LABELS = ["positive", "neutral", "negative"]
 LABEL2ID = {label: i for i, label in enumerate(SENTIMENT_LABELS)}
 ID2LABEL = {i: label for i, label in enumerate(SENTIMENT_LABELS)}
@@ -72,7 +73,7 @@ class MuRILSentimentClassifier:
         from transformers import AutoTokenizer
         if self._tokenizer is None:
             logger.info("Loading tokenizer from %s", self.checkpoint)
-            self._tokenizer = AutoTokenizer.from_pretrained(self.checkpoint)
+            self._tokenizer = AutoTokenizer.from_pretrained(self.checkpoint, revision=MURIL_REVISION)
         return self._tokenizer
 
     def _load_model(self, num_labels: int = 3):
@@ -81,6 +82,7 @@ class MuRILSentimentClassifier:
             logger.info("Loading model from %s", self.checkpoint)
             self._model = AutoModelForSequenceClassification.from_pretrained(
                 self.checkpoint,
+                revision=MURIL_REVISION,
                 num_labels=num_labels,
                 id2label=ID2LABEL,
                 label2id=LABEL2ID,
@@ -198,7 +200,7 @@ class MuRILSentimentClassifier:
             per_device_train_batch_size=batch_size,
             per_device_eval_batch_size=batch_size,
             learning_rate=learning_rate,
-            evaluation_strategy="epoch",
+            eval_strategy="epoch",
             save_strategy="epoch",
             load_best_model_at_end=True,
             metric_for_best_model="macro_f1",
@@ -221,7 +223,12 @@ class MuRILSentimentClassifier:
         train_result = trainer.train()
 
         best_f1 = trainer.state.best_metric or 0.0
-        best_epoch = int(trainer.state.best_model_checkpoint.split("-")[-1]) if trainer.state.best_model_checkpoint else 0
+        best_epoch = 0
+        if trainer.state.best_model_checkpoint:
+            try:
+                best_epoch = int(trainer.state.best_model_checkpoint.split("-")[-1])
+            except (ValueError, IndexError):
+                best_epoch = int(trainer.state.epoch)
         total_epochs = int(trainer.state.epoch)
 
         logger.info(
